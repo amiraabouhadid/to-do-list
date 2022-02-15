@@ -47,7 +47,11 @@ export default class Home {
     addTaskInput.placeholder = "Add to your list..";
     addTaskInput.type = "text";
     addTaskInput.onchange = this.addTask;
+    const addTaskButton = document.createElement("button");
+    addTaskButton.innerHTML = `<i class="fa-solid fa-plus"></i>`;
+    addTaskButton.classList = "border-0 bg-white";
     addTaskContainer.appendChild(addTaskInput);
+    addTaskContainer.appendChild(addTaskButton);
     //clear tasks
 
     const clearButton = document.createElement("button");
@@ -77,7 +81,7 @@ export default class Home {
 
       const editTask = document.createElement("i");
       editTask.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
-
+      editTask.style.marginRight = "0.75rem";
       editTask.classList = "border-0 bg-white";
       incompleteTask.appendChild(taskContainerDesc);
       incompleteTask.appendChild(editTask);
