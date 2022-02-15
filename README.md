@@ -1,14 +1,15 @@
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
-# Webpack Template
+# To Do List
 
->This is a template for webpack bundle of Javascript
+>A to do list where you can add tasks, mark completed tasks and clear all completed tasks. You can rearrange the order of the tasks and edit a task's descriptions. Built using webpack bundle of Javascript
 
 ## Built With
 
 - HTML5
 - CSS3
 - JavaScript ES6
+- Wepback
 
 ## Live demo
 
@@ -21,12 +22,12 @@ To get a local copy up and running follow these simple example steps:
 - Change the current working directory to the location you want the cloned directory.
 - Enter the following:
 ```
-$ git clone git@github.com:amiraabouhadid/webpack-template.git.
+$ git clone git@github.com:amiraabouhadid/to-do-list.git.
 ```
 - Press Enter to create your local clone.
 - Navigate to the cloned repository by running:
     ```
-    $ cd webpack-template
+    $ cd to-do-list
     ```
 - Install all dependencies using:
     ``` 
@@ -55,7 +56,7 @@ $ git clone git@github.com:amiraabouhadid/webpack-template.git.
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/amiraabouhadid/webpack-template/issues).
+Feel free to check the [issues page](https://github.com/amiraabouhadid/to-do-list/issues).
 
 ## Show your support
 
