@@ -42,9 +42,11 @@ export default class Home extends Task {
     addTaskContainer.classList = "d-flex justify-content-between border p-3";
 
     const addTaskInput = document.createElement("input");
-    addTaskInput.classList = "border-0";
+    addTaskInput.classList = "border-0  w-100";
+
     addTaskInput.placeholder = "Add to your list..";
     addTaskInput.type = "text";
+
     addTaskInput.onchange = this.addTask;
     const addTaskButton = document.createElement("button");
     addTaskButton.innerHTML = `<i class="fa-solid fa-plus"></i>`;
@@ -75,8 +77,17 @@ export default class Home extends Task {
       incompleteTaskCheck.type = "checkbox";
       incompleteTaskCheck.onchange = (e) => {
         e.preventDefault();
-        task.complete = true;
-        taskContainerDesc.style.textDecoration = "line-through";
+        if (task.complete) {
+          //true
+          task.complete = false;
+          taskContainerDesc.style.textDecoration = "none";
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+        } else {
+          //false
+          task.complete = true;
+          taskContainerDesc.style.textDecoration = "line-through";
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
       };
       incompleteTaskCheck.style.marginRight = "1rem";
       const incompleteTaskDescription = document.createElement("p");
@@ -93,7 +104,7 @@ export default class Home extends Task {
       editTaskButton.onclick = (e) => {
         const editTaskInput = document.createElement("input");
         editTaskInput.type = "text";
-        editTaskInput.placeholder = incompleteTaskDescription.innerHTML;
+        editTaskInput.value = incompleteTaskDescription.innerHTML;
         editTaskInput.classList = "border-0";
         editTaskInput.onchange = (e) => {
           task.description = e.target.value;
