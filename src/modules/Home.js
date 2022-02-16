@@ -77,22 +77,29 @@ export default class Home extends Task {
       incompleteTaskCheck.type = "checkbox";
       incompleteTaskCheck.onchange = (e) => {
         e.preventDefault();
-        if (task.complete) {
+        if (task.complete === true) {
           //true
           task.complete = false;
-          taskContainerDesc.style.textDecoration = "none";
-          localStorage.setItem("tasks", JSON.stringify(tasks));
         } else {
           //false
           task.complete = true;
-          taskContainerDesc.style.textDecoration = "line-through";
-          localStorage.setItem("tasks", JSON.stringify(tasks));
         }
+        tasks.map((el, i) => {
+          if (el == task) {
+            el.complete = task.complete;
+          }
+        });
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+
+        this.displayHome();
       };
       incompleteTaskCheck.style.marginRight = "1rem";
       const incompleteTaskDescription = document.createElement("p");
       incompleteTaskDescription.innerHTML = task.description;
-      incompleteTaskDescription.classList = "";
+      if (task.complete == true) {
+        incompleteTaskDescription.style.textDecoration = "line-through";
+        incompleteTaskCheck.checked = true;
+      }
 
       taskContainerDesc.appendChild(incompleteTaskCheck);
       taskContainerDesc.appendChild(incompleteTaskDescription);
