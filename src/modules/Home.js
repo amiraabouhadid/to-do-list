@@ -58,7 +58,6 @@ export default class Home extends Task {
     clearButton.classList = "text-secondary border p-3 w-100";
     clearButton.onclick = (e) => {
       tasks = tasks.filter((el) => !el.complete);
-      console.log(tasks);
       localStorage.setItem("tasks", JSON.stringify(tasks));
       this.displayHome();
     };
@@ -109,7 +108,7 @@ export default class Home extends Task {
           tasks = tasks.filter((el) => el !== task);
           tasks.map((el, i) => (el.index = i));
           localStorage.setItem("tasks", JSON.stringify(tasks));
-          console.log(tasks);
+
           this.displayHome();
         };
         taskContainerDesc.appendChild(editTaskInput);
