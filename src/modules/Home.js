@@ -6,9 +6,10 @@ let tasks = [
 ];
 export default class Home {
   static addTask = (e) => {
-    const task = new Task(e.target.value, false, 0);
+    const task = new Task(e.target.value, false, tasks.length);
     tasks.push(task);
     console.log(tasks);
+    this.displayHome();
   };
   static clearTasks = (e) => {
     tasks = [];
@@ -21,6 +22,7 @@ export default class Home {
   };
   static displayHome = () => {
     const container = document.getElementById("home-container");
+    container.innerHTML = "";
     container.classList = "container-fluid p-5";
     const tasksContainer = document.createElement("div");
     tasksContainer.classList = "text-center p-5";
