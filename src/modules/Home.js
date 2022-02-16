@@ -92,6 +92,11 @@ export default class Home extends Task {
       editTaskButton.style.marginRight = "0.65rem";
       editTaskButton.classList = "border-0 bg-white";
       editTaskButton.onclick = (e) => {
+        const editTaskInput = document.createElement("input");
+        editTaskInput.type = "text";
+        editTaskInput.placeholder = incompleteTaskDescription.innerHTML;
+        editTaskInput.classList = "border-0";
+
         const deleteTaskButton = document.createElement("button");
         deleteTaskButton.classList = "border-0 bg-white";
         deleteTaskButton.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
@@ -101,8 +106,10 @@ export default class Home extends Task {
           console.log(tasks);
           this.displayHome();
         };
+        taskContainerDesc.appendChild(editTaskInput);
         incompleteTask.appendChild(deleteTaskButton);
         editTaskButton.style.display = "none";
+        incompleteTaskDescription.style.display = "none";
       };
       incompleteTask.appendChild(taskContainerDesc);
       incompleteTask.appendChild(editTaskButton);
