@@ -51,6 +51,7 @@ export default class Home extends Task {
     const addTaskButton = document.createElement("button");
     addTaskButton.innerHTML = `<i class="fa-solid fa-plus"></i>`;
     addTaskButton.classList = "border-0 bg-white";
+    addTaskButton.onclick = this.addTask;
     addTaskContainer.appendChild(addTaskInput);
     addTaskContainer.appendChild(addTaskButton);
     //clear tasks
