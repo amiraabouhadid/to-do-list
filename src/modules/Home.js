@@ -31,7 +31,9 @@ export default class Home extends Task {
     const refreshButton = document.createElement("button");
     refreshButton.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i>`;
     refreshButton.classList = "rounded border-0 bg-white";
-    refreshButton.onclick = () => {};
+    refreshButton.onclick = (e) => {
+      window.location.reload();
+    };
 
     header.appendChild(title);
     header.appendChild(refreshButton);
