@@ -1,26 +1,24 @@
 import Task from "./Task";
 
-let tasks = [
-  { description: "wash the dishes", complete: false, index: 0 },
-  { description: "homework", complete: false, index: 1 },
-];
-export default class Home {
+let tasks;
+export default class Home extends Task {
+  state = { tasks };
   static addTask = (e) => {
-    const task = new Task(e.target.value, false, 0);
+    const task = new Task(e.target.value, false, tasks.length);
     tasks.push(task);
-    console.log(tasks);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    this.displayHome();
   };
-  static clearTasks = (e) => {
-    tasks = [];
-    this.displayHome;
-  };
-  static checkTask = (e) => {
-    e.target.value = true;
-    console.log(e.target.value);
-    console.log(tasks);
-  };
+
   static displayHome = () => {
+    if (localStorage.getItem("tasks")) {
+      tasks = JSON.parse(localStorage.getItem("tasks"));
+    } else {
+      localStorage.setItem("tasks", "");
+      tasks = [];
+    }
     const container = document.getElementById("home-container");
+    container.innerHTML = "";
     container.classList = "container-fluid p-5";
     const tasksContainer = document.createElement("div");
     tasksContainer.classList = "text-center p-5";
@@ -33,6 +31,9 @@ export default class Home {
     const refreshButton = document.createElement("button");
     refreshButton.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i>`;
     refreshButton.classList = "rounded border-0 bg-white";
+    refreshButton.onclick = (e) => {
+      window.location.reload();
+    };
 
     header.appendChild(title);
     header.appendChild(refreshButton);
@@ -43,13 +44,16 @@ export default class Home {
     addTaskContainer.classList = "d-flex justify-content-between border p-3";
 
     const addTaskInput = document.createElement("input");
-    addTaskInput.classList = "border-0";
+    addTaskInput.classList = "border-0  w-100";
+
     addTaskInput.placeholder = "Add to your list..";
     addTaskInput.type = "text";
+
     addTaskInput.onchange = this.addTask;
     const addTaskButton = document.createElement("button");
     addTaskButton.innerHTML = `<i class="fa-solid fa-plus"></i>`;
     addTaskButton.classList = "border-0 bg-white";
+    addTaskButton.onclick = this.addTask;
     addTaskContainer.appendChild(addTaskInput);
     addTaskContainer.appendChild(addTaskButton);
     //clear tasks
@@ -57,7 +61,11 @@ export default class Home {
     const clearButton = document.createElement("button");
     clearButton.innerHTML = "Clear all completed";
     clearButton.classList = "text-secondary border p-3 w-100";
-    clearButton.onclick = this.clearTasks;
+    clearButton.onclick = (e) => {
+      tasks = tasks.filter((el) => !el.complete);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+      this.displayHome();
+    };
     ///display incomplete tasks
     const incompleteTasks = document.createElement("div");
 
@@ -70,21 +78,67 @@ export default class Home {
         "d-flex align-items-baseline justify-content-between";
       const incompleteTaskCheck = document.createElement("input");
       incompleteTaskCheck.type = "checkbox";
-      incompleteTaskCheck.onchange = this.checkTask;
+      incompleteTaskCheck.onchange = (e) => {
+        e.preventDefault();
+        if (task.complete === true) {
+          //true
+          task.complete = false;
+        } else {
+          //false
+          task.complete = true;
+        }
+        tasks.map((el, i) => {
+          if (el == task) {
+            el.complete = task.complete;
+          }
+        });
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+
+        this.displayHome();
+      };
       incompleteTaskCheck.style.marginRight = "1rem";
       const incompleteTaskDescription = document.createElement("p");
       incompleteTaskDescription.innerHTML = task.description;
-      incompleteTaskDescription.classList = "";
+      if (task.complete == true) {
+        incompleteTaskDescription.style.textDecoration = "line-through";
+        incompleteTaskCheck.checked = true;
+      }
 
       taskContainerDesc.appendChild(incompleteTaskCheck);
       taskContainerDesc.appendChild(incompleteTaskDescription);
 
-      const editTask = document.createElement("i");
-      editTask.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
-      editTask.style.marginRight = "0.75rem";
-      editTask.classList = "border-0 bg-white";
+      const editTaskButton = document.createElement("button");
+      editTaskButton.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
+      editTaskButton.style.marginRight = "0.65rem";
+      editTaskButton.classList = "border-0 bg-white";
+      editTaskButton.onclick = (e) => {
+        const editTaskInput = document.createElement("input");
+        editTaskInput.type = "text";
+        editTaskInput.value = incompleteTaskDescription.innerHTML;
+        editTaskInput.classList = "border-0";
+        editTaskInput.onchange = (e) => {
+          task.description = e.target.value;
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+          this.displayHome();
+        };
+
+        const deleteTaskButton = document.createElement("button");
+        deleteTaskButton.classList = "border-0 bg-white";
+        deleteTaskButton.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+        deleteTaskButton.onclick = (e) => {
+          tasks = tasks.filter((el) => el !== task);
+          tasks.map((el, i) => (el.index = i));
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+
+          this.displayHome();
+        };
+        taskContainerDesc.appendChild(editTaskInput);
+        incompleteTask.appendChild(deleteTaskButton);
+        editTaskButton.style.display = "none";
+        incompleteTaskDescription.style.display = "none";
+      };
       incompleteTask.appendChild(taskContainerDesc);
-      incompleteTask.appendChild(editTask);
+      incompleteTask.appendChild(editTaskButton);
       incompleteTasks.appendChild(incompleteTask);
     });
     ///add all elements
