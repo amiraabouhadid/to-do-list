@@ -96,6 +96,11 @@ export default class Home extends Task {
         editTaskInput.type = "text";
         editTaskInput.placeholder = incompleteTaskDescription.innerHTML;
         editTaskInput.classList = "border-0";
+        editTaskInput.onchange = (e) => {
+          task.description = e.target.value;
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+          this.displayHome();
+        };
 
         const deleteTaskButton = document.createElement("button");
         deleteTaskButton.classList = "border-0 bg-white";
@@ -103,7 +108,6 @@ export default class Home extends Task {
         deleteTaskButton.onclick = (e) => {
           tasks = tasks.filter((el) => el !== task);
           localStorage.setItem("tasks", JSON.stringify(tasks));
-          console.log(tasks);
           this.displayHome();
         };
         taskContainerDesc.appendChild(editTaskInput);
