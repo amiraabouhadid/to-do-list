@@ -1,26 +1,22 @@
 import Task from "./Task";
 
-let tasks = [
-  { description: "wash the dishes", complete: false, index: 0 },
-  { description: "homework", complete: false, index: 1 },
-];
-export default class Home {
+let tasks;
+export default class Home extends Task {
+  state = { tasks };
   static addTask = (e) => {
     const task = new Task(e.target.value, false, tasks.length);
     tasks.push(task);
-    console.log(tasks);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
     this.displayHome();
   };
-  static clearTasks = (e) => {
-    tasks = [];
-    this.displayHome;
-  };
-  static checkTask = (e) => {
-    e.target.value = true;
-    console.log(e.target.value);
-    console.log(tasks);
-  };
+
   static displayHome = () => {
+    if (localStorage.getItem("tasks")) {
+      tasks = JSON.parse(localStorage.getItem("tasks"));
+    } else {
+      localStorage.setItem("tasks", "");
+      tasks = [];
+    }
     const container = document.getElementById("home-container");
     container.innerHTML = "";
     container.classList = "container-fluid p-5";
@@ -35,6 +31,7 @@ export default class Home {
     const refreshButton = document.createElement("button");
     refreshButton.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i>`;
     refreshButton.classList = "rounded border-0 bg-white";
+    refreshButton.onclick = () => location.reload;
 
     header.appendChild(title);
     header.appendChild(refreshButton);
@@ -59,7 +56,10 @@ export default class Home {
     const clearButton = document.createElement("button");
     clearButton.innerHTML = "Clear all completed";
     clearButton.classList = "text-secondary border p-3 w-100";
-    clearButton.onclick = this.clearTasks;
+    clearButton.onclick = (e) => {
+      tasks = [];
+      this.displayHome();
+    };
     ///display incomplete tasks
     const incompleteTasks = document.createElement("div");
 
@@ -72,7 +72,11 @@ export default class Home {
         "d-flex align-items-baseline justify-content-between";
       const incompleteTaskCheck = document.createElement("input");
       incompleteTaskCheck.type = "checkbox";
-      incompleteTaskCheck.onchange = this.checkTask;
+      incompleteTaskCheck.onchange = (e) => {
+        e.preventDefault();
+        task.complete = true;
+        taskContainerDesc.style.textDecoration = "line-through";
+      };
       incompleteTaskCheck.style.marginRight = "1rem";
       const incompleteTaskDescription = document.createElement("p");
       incompleteTaskDescription.innerHTML = task.description;
