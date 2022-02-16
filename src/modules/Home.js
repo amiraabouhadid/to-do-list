@@ -31,7 +31,7 @@ export default class Home extends Task {
     const refreshButton = document.createElement("button");
     refreshButton.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i>`;
     refreshButton.classList = "rounded border-0 bg-white";
-    refreshButton.onclick = () => location.reload;
+    refreshButton.onclick = () => {};
 
     header.appendChild(title);
     header.appendChild(refreshButton);
@@ -57,7 +57,9 @@ export default class Home extends Task {
     clearButton.innerHTML = "Clear all completed";
     clearButton.classList = "text-secondary border p-3 w-100";
     clearButton.onclick = (e) => {
-      tasks = [];
+      tasks = tasks.filter((el) => !el.complete);
+      console.log(tasks);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
       this.displayHome();
     };
     ///display incomplete tasks
@@ -85,12 +87,25 @@ export default class Home extends Task {
       taskContainerDesc.appendChild(incompleteTaskCheck);
       taskContainerDesc.appendChild(incompleteTaskDescription);
 
-      const editTask = document.createElement("i");
-      editTask.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
-      editTask.style.marginRight = "0.75rem";
-      editTask.classList = "border-0 bg-white";
+      const editTaskButton = document.createElement("button");
+      editTaskButton.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
+      editTaskButton.style.marginRight = "0.65rem";
+      editTaskButton.classList = "border-0 bg-white";
+      editTaskButton.onclick = (e) => {
+        const deleteTaskButton = document.createElement("button");
+        deleteTaskButton.classList = "border-0 bg-white";
+        deleteTaskButton.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+        deleteTaskButton.onclick = (e) => {
+          tasks = tasks.filter((el) => el !== task);
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+          console.log(tasks);
+          this.displayHome();
+        };
+        incompleteTask.appendChild(deleteTaskButton);
+        editTaskButton.style.display = "none";
+      };
       incompleteTask.appendChild(taskContainerDesc);
-      incompleteTask.appendChild(editTask);
+      incompleteTask.appendChild(editTaskButton);
       incompleteTasks.appendChild(incompleteTask);
     });
     ///add all elements
