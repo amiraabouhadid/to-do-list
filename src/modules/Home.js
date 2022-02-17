@@ -83,12 +83,14 @@ export default class Home extends Task {
       const incompleteTask = document.createElement("div");
       incompleteTask.style.cursor = "move";
       incompleteTask.style.left = "0";
+      incompleteTask.style.zIndex = "1";
       incompleteTask.style.top = (task.index * 60).toString() + "px";
 
       incompleteTask.style.height = "60px";
       let diffInPositions = 0,
         startingPosition = 0;
       incompleteTask.ondblclick = (e) => {
+        incompleteTask.style.zIndex = "10";
         e.preventDefault();
         startingPosition = e.clientY;
 
@@ -104,10 +106,14 @@ export default class Home extends Task {
         incompleteTask.onmouseup = (e) => {
           // if(incompleteTask.style.top < incompleteTasks.style.height)
           e.preventDefault();
-          task.index = Math.floor(Math.abs(incompleteTask.offsetTop / 60));
+          task.index =
+            Math.abs(incompleteTask.offsetTop) < Math.abs(container.offsetTop)
+              ? tasks.length - 1
+              : Math.floor(Math.abs(incompleteTask.offsetTop / 60));
           console.log(task.index);
           tasks.splice(i, 1);
           tasks.splice(task.index, 0, task);
+          tasks.map((el, i) => (el.index = i));
           localStorage.setItem("tasks", JSON.stringify(tasks));
 
           this.displayHome();
@@ -153,7 +159,7 @@ export default class Home extends Task {
       const editTaskButton = document.createElement("button");
       editTaskButton.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
       editTaskButton.style.marginRight = "0.65rem";
-      editTaskButton.style.zIndex = "10";
+
       editTaskButton.classList = "border-0 bg-white";
       editTaskButton.onclick = (e) => {
         const editTaskInput = document.createElement("input");
