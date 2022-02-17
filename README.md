@@ -2,7 +2,8 @@
 
 # To Do List
 
->A to do list where you can add tasks, mark completed tasks and clear all completed tasks. You can rearrange the order of the tasks and edit a task's descriptions. Built using webpack bundle of Javascript
+>A to do list where you can add tasks, mark completed tasks and clear all completed tasks. You can rearrange the order of the tasks by double clicking the task then dragging it to the desired location. You can also edit a task's description by clicking on the three vertical dots to its right. Built using webpack bundle of Javascript
+![Screenshot from 2022-02-17 18-41-48](https://user-images.githubusercontent.com/56790126/154528763-e48302b4-f52b-4b51-9e4d-cf85146f508b.png)
 
 ## Built With
 
@@ -13,7 +14,7 @@
 
 ## Live demo
 
-You can visit live version via [link]()
+You can visit live version via [link](https://toprocrastinate.netlify.app/)
 
 ## Getting Started
 
