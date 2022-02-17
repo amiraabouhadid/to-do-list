@@ -200,7 +200,7 @@ export default class Home extends Task {
     footerText.innerHTML =
       'Copyrights <i class="fas fa-copyright"></i> Amira Abouhadid';
     footer.appendChild(footerText);
-    ///add all elements
+    //add all elements
     incomptasks.appendChild(incompleteTasks);
     incomptasks.appendChild(clearButton);
     tasksContainer.appendChild(header);
