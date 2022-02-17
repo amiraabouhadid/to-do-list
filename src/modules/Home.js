@@ -80,32 +80,31 @@ export default class Home extends Task {
     incompleteTasks.style.height = (tasks.length * 60).toString() + "px";
 
     tasks.map((task, i) => {
-      const incompleteTaskContainer = document.createElement("div");
       const incompleteTask = document.createElement("div");
-      incompleteTaskContainer.style.cursor = "move";
-      incompleteTaskContainer.style.left = "0";
-      incompleteTaskContainer.style.top = (task.index * 60).toString() + "px";
+      incompleteTask.style.cursor = "move";
+      incompleteTask.style.left = "0";
+      incompleteTask.style.top = (task.index * 60).toString() + "px";
 
-      incompleteTaskContainer.style.height = "60px";
+      incompleteTask.style.height = "60px";
       let diffInPositions = 0,
         startingPosition = 0;
-      incompleteTaskContainer.onmousedown = (e) => {
+      incompleteTask.onclick = (e) => {
         e.preventDefault();
         startingPosition = e.clientY;
 
-        incompleteTaskContainer.onmousemove = (e) => {
+        incompleteTask.onmousemove = (e) => {
           e.preventDefault();
           diffInPositions = startingPosition - e.clientY;
           startingPosition = e.clientY;
 
-          incompleteTaskContainer.style.top =
-            incompleteTaskContainer.offsetTop - diffInPositions + "px";
-          incompleteTaskContainer.style.left = "0";
+          incompleteTask.style.top =
+            incompleteTask.offsetTop - diffInPositions + "px";
+          incompleteTask.style.left = "0";
         };
-        incompleteTaskContainer.onmouseup = (e) => {
+        incompleteTask.onmouseup = (e) => {
           // if(incompleteTask.style.top < incompleteTasks.style.height)
           e.preventDefault();
-          task.index = Math.round(incompleteTaskContainer.offsetTop / 60);
+          task.index = Math.floor(Math.abs(incompleteTask.offsetTop / 60));
           console.log(task.index);
           //tasks.splice(i, 0, task);
           localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -114,14 +113,14 @@ export default class Home extends Task {
         };
       };
 
-      incompleteTaskContainer.classList =
+      incompleteTask.classList =
         " d-flex border p-3 container justify-content-between align-items-baseline bg-white position-absolute  ";
       const taskContainerDesc = document.createElement("div");
       taskContainerDesc.classList =
         "d-flex align-items-baseline justify-content-between ";
       const incompleteTaskCheck = document.createElement("input");
       incompleteTaskCheck.type = "checkbox";
-      incompleteTaskCheck.onchange = (e) => {
+      incompleteTaskCheck.onclick = (e) => {
         e.preventDefault();
         if (task.complete === true) {
           //true
@@ -152,8 +151,9 @@ export default class Home extends Task {
 
       const editTaskButton = document.createElement("button");
       editTaskButton.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
-      editTaskButton.style.right = "0.65rem";
-      editTaskButton.classList = "border-0 bg-white ";
+      editTaskButton.style.marginRight = "0.65rem";
+      editTaskButton.style.zIndex = "10";
+      editTaskButton.classList = "border-0 bg-white";
       editTaskButton.onclick = (e) => {
         const editTaskInput = document.createElement("input");
         editTaskInput.type = "text";
@@ -175,15 +175,13 @@ export default class Home extends Task {
           this.displayHome();
         };
         taskContainerDesc.appendChild(editTaskInput);
-        taskContainerDesc.appendChild(deleteTaskButton);
+        incompleteTask.appendChild(deleteTaskButton);
         editTaskButton.style.display = "none";
         incompleteTaskDescription.style.display = "none";
       };
-      taskContainerDesc.appendChild(editTaskButton);
       incompleteTask.appendChild(taskContainerDesc);
-
-      incompleteTaskContainer.appendChild(incompleteTask);
-      incompleteTasks.appendChild(incompleteTaskContainer);
+      incompleteTask.appendChild(editTaskButton);
+      incompleteTasks.appendChild(incompleteTask);
     });
     ///add all elements
     incomptasks.appendChild(incompleteTasks);
