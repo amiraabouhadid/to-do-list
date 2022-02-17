@@ -19,12 +19,14 @@ export default class Home extends Task {
     }
     const container = document.getElementById("home-container");
     container.innerHTML = "";
-    container.classList = "container-fluid p-5";
+    container.style.position = "";
+    container.classList = " container-fluid p-5 ";
     const tasksContainer = document.createElement("div");
-    tasksContainer.classList = "text-center p-5";
+    tasksContainer.classList = "  container text-center p-5";
     ////header
     const header = document.createElement("div");
-    header.classList = "d-flex justify-content-between border p-3";
+    header.classList =
+      "d-flex justify-content-between border p-3 position-static ";
     const title = document.createElement("h3");
     title.innerHTML = "Today's To Do";
 
@@ -41,7 +43,8 @@ export default class Home extends Task {
     ////addTask
 
     const addTaskContainer = document.createElement("div");
-    addTaskContainer.classList = "d-flex justify-content-between border p-3";
+    addTaskContainer.classList =
+      "d-flex position-static container  justify-content-between border p-3";
 
     const addTaskInput = document.createElement("input");
     addTaskInput.classList = "border-0  w-100";
@@ -57,10 +60,13 @@ export default class Home extends Task {
     addTaskContainer.appendChild(addTaskInput);
     addTaskContainer.appendChild(addTaskButton);
     //clear tasks
-
+    const incomptasks = document.createElement("div");
+    incomptasks.classList = "position-relative container-fluid  ";
     const clearButton = document.createElement("button");
     clearButton.innerHTML = "Clear all completed";
-    clearButton.classList = "text-secondary border p-3 w-100";
+    clearButton.classList =
+      "  border p-3 container text-center text-secondary position-absolute ";
+    clearButton.style.left = "0";
     clearButton.onclick = (e) => {
       tasks = tasks.filter((el) => !el.complete);
       localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -68,14 +74,51 @@ export default class Home extends Task {
     };
     ///display incomplete tasks
     const incompleteTasks = document.createElement("div");
+    incompleteTasks.innerHTML = "";
+
+    incompleteTasks.classList = " w-100 ";
+    incompleteTasks.style.height = (tasks.length * 60).toString() + "px";
 
     tasks.map((task, i) => {
+      const incompleteTaskContainer = document.createElement("div");
       const incompleteTask = document.createElement("div");
-      incompleteTask.classList =
-        "border p-3 d-flex flex-nowrap justify-content-between align-items-baseline ";
+      incompleteTaskContainer.style.cursor = "move";
+      incompleteTaskContainer.style.left = "0";
+      incompleteTaskContainer.style.top = (task.index * 60).toString() + "px";
+
+      incompleteTaskContainer.style.height = "60px";
+      let diffInPositions = 0,
+        startingPosition = 0;
+      incompleteTaskContainer.onmousedown = (e) => {
+        e.preventDefault();
+        startingPosition = e.clientY;
+
+        incompleteTaskContainer.onmousemove = (e) => {
+          e.preventDefault();
+          diffInPositions = startingPosition - e.clientY;
+          startingPosition = e.clientY;
+
+          incompleteTaskContainer.style.top =
+            incompleteTaskContainer.offsetTop - diffInPositions + "px";
+          incompleteTaskContainer.style.left = "0";
+        };
+        incompleteTaskContainer.onmouseup = (e) => {
+          // if(incompleteTask.style.top < incompleteTasks.style.height)
+          e.preventDefault();
+          task.index = Math.round(incompleteTaskContainer.offsetTop / 60);
+          console.log(task.index);
+          //tasks.splice(i, 0, task);
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+
+          this.displayHome();
+        };
+      };
+
+      incompleteTaskContainer.classList =
+        " d-flex border p-3 container justify-content-between align-items-baseline bg-white position-absolute  ";
       const taskContainerDesc = document.createElement("div");
       taskContainerDesc.classList =
-        "d-flex align-items-baseline justify-content-between";
+        "d-flex align-items-baseline justify-content-between ";
       const incompleteTaskCheck = document.createElement("input");
       incompleteTaskCheck.type = "checkbox";
       incompleteTaskCheck.onchange = (e) => {
@@ -109,8 +152,8 @@ export default class Home extends Task {
 
       const editTaskButton = document.createElement("button");
       editTaskButton.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
-      editTaskButton.style.marginRight = "0.65rem";
-      editTaskButton.classList = "border-0 bg-white";
+      editTaskButton.style.right = "0.65rem";
+      editTaskButton.classList = "border-0 bg-white ";
       editTaskButton.onclick = (e) => {
         const editTaskInput = document.createElement("input");
         editTaskInput.type = "text";
@@ -129,23 +172,26 @@ export default class Home extends Task {
           tasks = tasks.filter((el) => el !== task);
           tasks.map((el, i) => (el.index = i));
           localStorage.setItem("tasks", JSON.stringify(tasks));
-
           this.displayHome();
         };
         taskContainerDesc.appendChild(editTaskInput);
-        incompleteTask.appendChild(deleteTaskButton);
+        taskContainerDesc.appendChild(deleteTaskButton);
         editTaskButton.style.display = "none";
         incompleteTaskDescription.style.display = "none";
       };
+      taskContainerDesc.appendChild(editTaskButton);
       incompleteTask.appendChild(taskContainerDesc);
-      incompleteTask.appendChild(editTaskButton);
-      incompleteTasks.appendChild(incompleteTask);
+
+      incompleteTaskContainer.appendChild(incompleteTask);
+      incompleteTasks.appendChild(incompleteTaskContainer);
     });
     ///add all elements
+    incomptasks.appendChild(incompleteTasks);
+    incomptasks.appendChild(clearButton);
     tasksContainer.appendChild(header);
     tasksContainer.appendChild(addTaskContainer);
-    tasksContainer.appendChild(incompleteTasks);
-    tasksContainer.appendChild(clearButton);
+    tasksContainer.appendChild(incomptasks);
+
     container.appendChild(tasksContainer);
   };
 }
