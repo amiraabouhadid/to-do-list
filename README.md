@@ -34,8 +34,10 @@ $ git clone git@github.com:amiraabouhadid/to-do-list.git.
     ``` 
     $ npm install
     ```
+
 - Run local server using:
-    ``` 
+    ```
+    $ npm run build
     $ npm start
     ```
 
