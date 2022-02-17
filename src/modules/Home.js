@@ -69,6 +69,7 @@ export default class Home extends Task {
     clearButton.style.left = "0";
     clearButton.onclick = (e) => {
       tasks = tasks.filter((el) => !el.complete);
+      tasks.map((el, i) => (el.index = i));
       localStorage.setItem("tasks", JSON.stringify(tasks));
       this.displayHome();
     };
