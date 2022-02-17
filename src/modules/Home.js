@@ -88,7 +88,7 @@ export default class Home extends Task {
       incompleteTask.style.height = "60px";
       let diffInPositions = 0,
         startingPosition = 0;
-      incompleteTask.onclick = (e) => {
+      incompleteTask.ondblclick = (e) => {
         e.preventDefault();
         startingPosition = e.clientY;
 
@@ -106,7 +106,8 @@ export default class Home extends Task {
           e.preventDefault();
           task.index = Math.floor(Math.abs(incompleteTask.offsetTop / 60));
           console.log(task.index);
-          //tasks.splice(i, 0, task);
+          tasks.splice(i, 1);
+          tasks.splice(task.index, 0, task);
           localStorage.setItem("tasks", JSON.stringify(tasks));
 
           this.displayHome();
