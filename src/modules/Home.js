@@ -19,12 +19,14 @@ export default class Home extends Task {
     }
     const container = document.getElementById("home-container");
     container.innerHTML = "";
-    container.classList = "container-fluid p-5";
+    container.style.position = "";
+    container.classList = " container-fluid p-5 ";
     const tasksContainer = document.createElement("div");
-    tasksContainer.classList = "text-center p-5";
+    tasksContainer.classList = "  container text-center p-5";
     ////header
     const header = document.createElement("div");
-    header.classList = "d-flex justify-content-between border p-3";
+    header.classList =
+      "d-flex justify-content-between border p-3 position-static ";
     const title = document.createElement("h3");
     title.innerHTML = "Today's To Do";
 
@@ -41,7 +43,8 @@ export default class Home extends Task {
     ////addTask
 
     const addTaskContainer = document.createElement("div");
-    addTaskContainer.classList = "d-flex justify-content-between border p-3";
+    addTaskContainer.classList =
+      "d-flex position-static container  justify-content-between border p-3";
 
     const addTaskInput = document.createElement("input");
     addTaskInput.classList = "border-0  w-100";
@@ -57,28 +60,75 @@ export default class Home extends Task {
     addTaskContainer.appendChild(addTaskInput);
     addTaskContainer.appendChild(addTaskButton);
     //clear tasks
-
+    const incomptasks = document.createElement("div");
+    incomptasks.classList = "position-relative container-fluid  ";
     const clearButton = document.createElement("button");
     clearButton.innerHTML = "Clear all completed";
-    clearButton.classList = "text-secondary border p-3 w-100";
+    clearButton.classList =
+      "  border p-3 container text-center text-secondary position-absolute ";
+    clearButton.style.left = "0";
     clearButton.onclick = (e) => {
       tasks = tasks.filter((el) => !el.complete);
+      tasks.map((el, i) => (el.index = i));
       localStorage.setItem("tasks", JSON.stringify(tasks));
       this.displayHome();
     };
     ///display incomplete tasks
     const incompleteTasks = document.createElement("div");
+    incompleteTasks.innerHTML = "";
+
+    incompleteTasks.classList = " w-100 ";
+    incompleteTasks.style.height = (tasks.length * 60).toString() + "px";
 
     tasks.map((task, i) => {
       const incompleteTask = document.createElement("div");
+      incompleteTask.style.cursor = "move";
+      incompleteTask.style.left = "0";
+      incompleteTask.style.zIndex = "1";
+      incompleteTask.style.top = (task.index * 60).toString() + "px";
+
+      incompleteTask.style.height = "60px";
+      let diffInPositions = 0,
+        startingPosition = 0;
+      incompleteTask.ondblclick = (e) => {
+        incompleteTask.style.zIndex = "10";
+        e.preventDefault();
+        startingPosition = e.clientY;
+
+        incompleteTask.onmousemove = (e) => {
+          e.preventDefault();
+          diffInPositions = startingPosition - e.clientY;
+          startingPosition = e.clientY;
+
+          incompleteTask.style.top =
+            incompleteTask.offsetTop - diffInPositions + "px";
+          incompleteTask.style.left = "0";
+        };
+        incompleteTask.onmouseup = (e) => {
+          // if(incompleteTask.style.top < incompleteTasks.style.height)
+          e.preventDefault();
+          task.index =
+            Math.abs(incompleteTask.offsetTop) < Math.abs(container.offsetTop)
+              ? tasks.length - 1
+              : Math.floor(Math.abs(incompleteTask.offsetTop / 60));
+          console.log(task.index);
+          tasks.splice(i, 1);
+          tasks.splice(task.index, 0, task);
+          tasks.map((el, i) => (el.index = i));
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+
+          this.displayHome();
+        };
+      };
+
       incompleteTask.classList =
-        "border p-3 d-flex flex-nowrap justify-content-between align-items-baseline ";
+        " d-flex border p-3 container justify-content-between align-items-baseline bg-white position-absolute  ";
       const taskContainerDesc = document.createElement("div");
       taskContainerDesc.classList =
-        "d-flex align-items-baseline justify-content-between";
+        "d-flex align-items-baseline justify-content-between ";
       const incompleteTaskCheck = document.createElement("input");
       incompleteTaskCheck.type = "checkbox";
-      incompleteTaskCheck.onchange = (e) => {
+      incompleteTaskCheck.onclick = (e) => {
         e.preventDefault();
         if (task.complete === true) {
           //true
@@ -110,6 +160,7 @@ export default class Home extends Task {
       const editTaskButton = document.createElement("button");
       editTaskButton.innerHTML = `<i class="fa-solid fa-ellipsis-vertical"></i>`;
       editTaskButton.style.marginRight = "0.65rem";
+
       editTaskButton.classList = "border-0 bg-white";
       editTaskButton.onclick = (e) => {
         const editTaskInput = document.createElement("input");
@@ -129,7 +180,6 @@ export default class Home extends Task {
           tasks = tasks.filter((el) => el !== task);
           tasks.map((el, i) => (el.index = i));
           localStorage.setItem("tasks", JSON.stringify(tasks));
-
           this.displayHome();
         };
         taskContainerDesc.appendChild(editTaskInput);
@@ -150,11 +200,12 @@ export default class Home extends Task {
     footerText.innerHTML =
       'Copyrights <i class="fas fa-copyright"></i> Amira Abouhadid';
     footer.appendChild(footerText);
-    ///add all elements
+    //add all elements
+    incomptasks.appendChild(incompleteTasks);
+    incomptasks.appendChild(clearButton);
     tasksContainer.appendChild(header);
     tasksContainer.appendChild(addTaskContainer);
-    tasksContainer.appendChild(incompleteTasks);
-    tasksContainer.appendChild(clearButton);
+    tasksContainer.appendChild(incomptasks);
 
     container.appendChild(tasksContainer);
     container.appendChild(footer);
