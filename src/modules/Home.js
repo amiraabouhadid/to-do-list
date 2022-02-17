@@ -191,6 +191,15 @@ export default class Home extends Task {
       incompleteTask.appendChild(editTaskButton);
       incompleteTasks.appendChild(incompleteTask);
     });
+    ///add footer
+    const footer = document.createElement("div");
+    footer.classList =
+      "bg-light border text-center text-secondary fixed-bottom";
+
+    const footerText = document.createElement("p");
+    footerText.innerHTML =
+      'Copyrights <i class="fas fa-copyright"></i> Amira Abouhadid';
+    footer.appendChild(footerText);
     ///add all elements
     incomptasks.appendChild(incompleteTasks);
     incomptasks.appendChild(clearButton);
@@ -199,5 +208,6 @@ export default class Home extends Task {
     tasksContainer.appendChild(incomptasks);
 
     container.appendChild(tasksContainer);
+    container.appendChild(footer);
   };
 }
