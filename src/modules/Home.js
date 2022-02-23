@@ -1,29 +1,23 @@
 import Task from "./Task";
-
+import { getTasks } from "./getTasks";
 let tasks;
 export default class Home extends Task {
   state = { tasks };
   static addTask = (e) => {
+    tasks = getTasks();
     const task = new Task(e.target.value, false, tasks.length);
     tasks.push(task);
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    this.displayHome();
+    window.location.reload();
   };
   static clearCompletedTasks = (e) => {
+    tasks = getTasks();
     tasks = tasks.filter((el) => !el.complete);
     tasks.map((el, i) => (el.index = i));
     localStorage.setItem("tasks", JSON.stringify(tasks));
     this.displayHome();
   };
-  static getTasks = () => {
-    if (localStorage.getItem("tasks")) {
-      tasks = JSON.parse(localStorage.getItem("tasks"));
-    } else {
-      localStorage.setItem("tasks", "");
-      tasks = [];
-    }
-    return tasks;
-  };
+
   static checkTask = (task) => {
     if (task.complete === true) {
       //true
@@ -45,7 +39,7 @@ export default class Home extends Task {
     tasks = tasks.filter((el) => el !== task);
     tasks.map((el, i) => (el.index = i));
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    this.displayHome();
+    window.location.reload();
   };
   static decorateTask = (
     task,
@@ -64,7 +58,8 @@ export default class Home extends Task {
   };
 
   static displayHome = () => {
-    tasks = this.getTasks();
+    tasks = getTasks();
+
     const container = document.getElementById("home-container");
     container.innerHTML = "";
     container.style.position = "";
@@ -101,6 +96,7 @@ export default class Home extends Task {
     addTaskInput.type = "text";
 
     addTaskInput.onchange = this.addTask;
+
     const addTaskButton = document.createElement("button");
     addTaskButton.innerHTML = `<i class="fa-solid fa-plus"></i>`;
     addTaskButton.classList = "border-0 bg-white";
@@ -148,7 +144,6 @@ export default class Home extends Task {
           incompleteTask.style.left = "0";
         };
         incompleteTask.onmouseup = (e) => {
-          // if(incompleteTask.style.top < incompleteTasks.style.height)
           e.preventDefault();
           task.index =
             Math.abs(incompleteTask.offsetTop) < Math.abs(container.offsetTop)
