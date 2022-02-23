@@ -30,7 +30,6 @@ beforeEach(() => {
 
 describe("add and delete task", () => {
   test("adds task", () => {
-    console.log("starting first test...");
     let tasks;
     const e = { target: { value: "buy food" } };
 
@@ -39,7 +38,6 @@ describe("add and delete task", () => {
     expect(tasks).toHaveLength(1);
   });
   test("deletes task", () => {
-    console.log("starting second test...");
     let initialTasks = [
       { complete: "true", description: "buy batteries", index: "0" },
       { complete: "false", description: "buy batteries", index: "1" },
