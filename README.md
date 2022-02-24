@@ -40,6 +40,11 @@ $ git clone git@github.com:amiraabouhadid/to-do-list.git.
     $ npm run build
     $ npm start
     ```
+- Run unit tests using:
+    ```
+    $ npm run test
+
+    ```
 
 ### Prerequisites
 - GitHub
