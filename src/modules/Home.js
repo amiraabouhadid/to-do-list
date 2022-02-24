@@ -5,20 +5,21 @@ export default class Home extends Task {
   state = { tasks };
   static addTask = (e) => {
     tasks = getTasks();
+
     const task = new Task(e.target.value, false, tasks.length);
     tasks.push(task);
     localStorage.setItem("tasks", JSON.stringify(tasks));
     window.location.reload();
   };
-  static clearCompletedTasks = (e) => {
+  static clearCompletedTasks = (tasks) => {
     tasks = getTasks();
     tasks = tasks.filter((el) => !el.complete);
     tasks.map((el, i) => (el.index = i));
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    this.displayHome();
+    window.location.reload();
   };
 
-  static checkTask = (task) => {
+  static checkTask = (tasks, task) => {
     if (task.complete === true) {
       //true
       task.complete = false;
@@ -33,9 +34,9 @@ export default class Home extends Task {
     });
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
-    this.displayHome();
+    window.location.reload();
   };
-  static deleteTask = (task) => {
+  static deleteTask = (tasks, task) => {
     tasks = tasks.filter((el) => el !== task);
     tasks.map((el, i) => (el.index = i));
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -51,10 +52,10 @@ export default class Home extends Task {
       incompleteTaskCheck.checked = true;
     }
   };
-  static updateInput = (task, updatedDescription) => {
+  static editTask = (tasks, task, updatedDescription) => {
     task.description = updatedDescription;
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    this.displayHome();
+    window.location.reload();
   };
 
   static displayHome = () => {
@@ -111,7 +112,10 @@ export default class Home extends Task {
     clearButton.classList =
       "  border p-3 container text-center text-secondary position-absolute ";
     clearButton.style.left = "0";
-    clearButton.onclick = this.clearCompletedTasks;
+    clearButton.onclick = (e) => {
+      e.preventDefault();
+      this.clearCompletedTasks(tasks);
+    };
     ///display incomplete tasks
     const incompleteTasks = document.createElement("div");
     incompleteTasks.innerHTML = "";
@@ -167,7 +171,7 @@ export default class Home extends Task {
       incompleteTaskCheck.type = "checkbox";
       incompleteTaskCheck.onclick = (e) => {
         e.preventDefault();
-        this.checkTask(task);
+        this.checkTask(tasks, task);
       };
       incompleteTaskCheck.style.marginRight = "1rem";
       const incompleteTaskDescription = document.createElement("p");
@@ -190,7 +194,7 @@ export default class Home extends Task {
         editTaskInput.onchange = (e) => {
           e.preventDefault();
           const updatedDescription = e.target.value;
-          this.updateInput(task, updatedDescription);
+          this.editTask(tasks, task, updatedDescription);
         };
 
         const deleteTaskButton = document.createElement("button");
@@ -199,7 +203,7 @@ export default class Home extends Task {
         deleteTaskButton.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
         deleteTaskButton.onclick = (e) => {
           e.preventDefault();
-          this.deleteTask(task);
+          this.deleteTask(tasks, task);
         };
         taskContainerDesc.appendChild(editTaskInput);
         buttonsContainer.appendChild(deleteTaskButton);
